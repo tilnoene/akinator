@@ -5,8 +5,11 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Roboto Slab', Georgia, serif;
-  background: #ffffff;
-  color: #000000;
+  background: #222222;
+  color: #eeeeee;
+  width: 100vw;
+  min-height: 100vh;
+  text-align: center;
 }
 
 a {
