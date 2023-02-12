@@ -7,6 +7,19 @@ export const ContainerPage = styled.div`
   justify-content: center;
   display: grid;
   grid-template-rows: 50px calc(100% - 2 * 50px) 50px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 export const ContainerButtons = styled.div`
@@ -24,9 +37,4 @@ export const ContainerQuestion = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
-  h1 {
-    font-size: 32px;
-    font-weight: 500;
-  }
 `;

@@ -9,3 +9,7 @@ export const toastOptions: ToastOptions = {
   draggable: true,
   progress: undefined,
 };
+
+export const parseString = (str: string): string => {
+  return str.replace('_', ' ');
+}
