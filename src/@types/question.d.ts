@@ -1,6 +1,14 @@
-type Answer = 'YES' | 'NO' | 'MAYBE';
+type Answer = 'yes' | 'no' | 'idk'; // I don't know
 
 type Question = {
-  id: number,
-  question: string,
+  column: string;
+  data: string;
+  answer?: Answer;
+}
+
+type Guess = string | null;
+
+type GameState = {
+  questions: Question[];
+  guesses: Guess[];
 }

@@ -1,77 +1,103 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import Button from '../../components/Button';
 import Footer from '../../components/Footer';
+
 import { ContainerButtons, ContainerPage, ContainerQuestion } from './styles';
 
+import api from '../../services/api';
+
+import { toast } from 'react-toastify';
+import { toastOptions } from '../../services/utils';
+
+const defaultGameState: GameState = {
+  questions: [],
+  guesses: [],
+};
+
 const Home = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [gameState, setGameState] = useState<GameState>(defaultGameState);
+  const [loading, setLoading] = useState(true);
+  const [answer, setAnswer] = useState<string | null>(null);
 
-  const questions: Question[] = [
-    {
-      id: 1,
-      question: 'O personagem é homem?',
-    },
-    {
-      id: 2,
-      question: 'O personagem é azul?',
-    },
-    {
-      id: 3,
-      question: 'O personagem canta?',
-    }
-  ];
+  const getNewGameState = (oldGameState: GameState) => {
+    setLoading(true);
 
-  const nextQuestion = () => {
-    setCurrentQuestion(currentQuestion + 1);
-  }
+    api
+      .post('/', oldGameState)
+      .then(response => {
+        console.log(response.data);
 
-  const setAnswer = (id: number, answer: Answer) => {
-    console.log(id, answer);
+        setGameState(response.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err); // TODO: pop up
+        toast.error('Ocorreu um erro!', toastOptions)
+      });
+  };
 
-    nextQuestion();
-  }
+  const setQuestionAnswer = (answer: Answer) => {
+    const aux = gameState;
+    aux.questions[aux.questions.length - 1].answer = answer;
+
+    setGameState(aux);
+    getNewGameState(aux);
+  };
+
+  useEffect(() => {
+    getNewGameState(defaultGameState);
+  }, []);
 
   return (
     <ContainerPage>
-      <div></div>
+      <div>Memoização</div>
 
-      {currentQuestion < questions.length ?
-        (
-          <ContainerQuestion>
-            <h1>
-              {questions[currentQuestion].question}
-            </h1>
+      {loading ? (
+        <div>TODO: loading...</div>
+      ) : (
+        <div>
 
-            <ContainerButtons>
-              <Button onClick={() =>
-                setAnswer(questions[currentQuestion].id, 'YES')
-              }>
-                SIM
-              </Button>
+        
+        <div>
+          {gameState.guesses.length === 0 ? (
+            <ContainerQuestion>
+              <h1>
+                Is the{' '}
+                {gameState.questions[gameState.questions.length - 1].column}{' '}
+                {gameState.questions[gameState.questions.length - 1].data}?
+              </h1>
 
-              <Button onClick={() =>
-                setAnswer(questions[currentQuestion].id, 'YES')
-              }>
-                NÃO
-              </Button>
+              <ContainerButtons>
+                <Button onClick={() => setQuestionAnswer('yes')}>SIM</Button>
 
-              <Button onClick={() =>
-                setAnswer(questions[currentQuestion].id, 'YES')
-              }>
-                NÃO SEI
-              </Button>
-            </ContainerButtons>
-          </ContainerQuestion>
-        ) : (
-          <div>
-            Não consegui adivinhar quem é :(
+                <Button onClick={() => setQuestionAnswer('no')}>NÃO</Button>
+
+                <Button onClick={() => setQuestionAnswer('idk')}>NÃO SEI</Button>
+              </ContainerButtons>
+            </ContainerQuestion>
+          ) : (
+            <div>
+              {gameState.guesses[gameState.guesses.length - 1] ? (
+                <div>
+                  <h1>Is {gameState.guesses[gameState.guesses.length - 1]}?</h1>
+                  
+                  <ContainerButtons>
+                    <Button onClick={() => setAnswer(gameState.guesses[gameState.guesses.length - 1])}>SIM</Button>
+                    <Button onClick={() => getNewGameState(gameState)}>NÃO</Button>
+                  </ContainerButtons>
+                </div>
+              ) : (
+                <div>Não consegui adivinhar quem é! :(</div>
+              )}
+            </div>
+          )}
           </div>
-        )
-      }
+        </div>
+      )}
 
       <Footer />
-
-    </ContainerPage >
+    </ContainerPage>
   );
 };
 
