@@ -12,6 +12,10 @@ export const ContainerPage = styled.div`
     font-size: 32px;
     font-weight: 500;
     text-align: center;
+
+    b {
+      font-weight: 700;
+    }
   }
 
   h2 {
