@@ -86,7 +86,8 @@ const Home = () => {
   return (
     <ContainerPage>
       <div>
-        <h2 style={{ maxWidth: '520px' }}>Akinator</h2>
+        <h2 style={{ maxWidth: '520px', margin: 0, paddingTop: '20px' }}>Akinator</h2>
+        <h3 style={{ maxWidth: '520px', margin: 0, fontWeight: 300 }}>Possíveis respostas: {gameState.remain ? gameState.remain : "?"}</h3>
       </div>
 
       {loading ? (

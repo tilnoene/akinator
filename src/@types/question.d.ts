@@ -11,4 +11,5 @@ type Guess = string | null;
 type GameState = {
   questions: Question[];
   guesses: Guess[];
+  remain?: number;
 }
